@@ -8,11 +8,12 @@
     <body>
         <div style="margin-left: 35%; margin-top: 15%">
             <form action="upload" method="POST" enctype="multipart/form-data">
-                <input type="file" name="file"/>
+                Файл для загрузки: <input type="file" name="file"/>
+                <br/>
                 <input type="submit" value="Загрузить" />
             </form>
             <br/>
-            <a href="download">Скачать что есть</a>
+            <button onclick="javascript:window.location.assign('download')">Скачать что есть</button>
         </div>
     </body>
 </html>

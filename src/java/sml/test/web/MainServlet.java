@@ -116,6 +116,12 @@ public class MainServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             if (UPLOAD_URL.equals(request.getServletPath())) {
                 Part filePart = request.getPart("file");
+                if (filePart.getSubmittedFileName().isEmpty()) {
+                    throw new ExpectedException("не был выбран файл");
+                }
+                if (filePart.getSize() == 0) {
+                    throw new ExpectedException("файл пуст");
+                }
                 InputStream fileContent = new BufferedInputStream(filePart.getInputStream(), 4096);
                 try {
                     Unmarshaller rootUnmarshaller = context.createUnmarshaller();
@@ -144,7 +150,7 @@ public class MainServlet extends HttpServlet {
                     }
                 } 
                 catch (JAXBException ex) {
-                    throw new RuntimeException(ex);
+                    throw new RuntimeException("Ошибка при обработке xml", ex);
                 }
                 response.setContentType("text/html;charset=UTF-8");
                 try (PrintWriter out = response.getWriter()) {

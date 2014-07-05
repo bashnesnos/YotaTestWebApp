@@ -5,6 +5,7 @@
 nbproject/
 build.xml
 .gradle/
+getOutput.html
 
 #################
 ## Eclipse

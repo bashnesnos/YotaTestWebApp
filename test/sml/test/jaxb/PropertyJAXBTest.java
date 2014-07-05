@@ -155,7 +155,7 @@ public class PropertyJAXBTest {
                         .child("some name", null)
             .toProperty();
         expectedRoot.getProperties().add(expectedProp);
-        
+        assertTrue(unmarshalledRoot.getProperties().size() == 2);
         assertTrue(unmarshalledRoot.getProperties().equals(expectedRoot.getProperties()));
     }
     

@@ -121,7 +121,7 @@ public class MainServlet extends HttpServlet {
                     Unmarshaller rootUnmarshaller = context.createUnmarshaller();
                     Root unmarshalled = (Root) rootUnmarshaller.unmarshal(fileContent);
                     for (Property unmarshalledProp : unmarshalled.getProperties()) {
-                        List<Property> candidates = propertyFacade.findTopByName(unmarshalledProp.getName());
+                        List<Property> candidates = propertyFacade.findTopByName(unmarshalledProp.getName()); //actually, it will merge all your properties with the same name and value into one hieararchy
                         
                         if (candidates.isEmpty() || !candidates.contains(unmarshalledProp)) {
                             Property merged = null;

@@ -25,14 +25,14 @@ public class PropertyBuilder {
     }
     
     public PropertyBuilder setValue(String value) {
-        current.setValue(value);
+        current.setVal(value);
         return this;
     }
 
     public PropertyBuilder child(String name, String value) {
         Property child = new Property();
         child.setName(name);
-        child.setValue(value);
+        child.setVal(value);
         child.setParent(current);
         current = child;
         return this;

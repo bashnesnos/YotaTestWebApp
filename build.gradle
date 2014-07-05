@@ -42,9 +42,6 @@ sourceSets {
         java {
             srcDir 'src/java'
         }
-        resources {
-            srcDir 'src/conf'
-        }
     }
     test {
         java {
@@ -69,11 +66,18 @@ task processTemplates(type: Copy) {
     into 'build/webinf-resources'
 }
 
+processResources {
+    from('src/conf') {
+        into 'META-INF'
+    }
+}
+
 processTestResources {
     from war
 }
 
 war {
+    exclude '**/WEB-INF/glassfish-resources.xml' //so the hard-coded one is ignored
     webInf { 
         from processTemplates
     }

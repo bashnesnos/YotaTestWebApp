@@ -9,12 +9,8 @@ package sml.test.ejb;
 import java.util.List;
 import javax.persistence.EntityManager;
 
-/**
- *
- * @author asemelit
- */
 public abstract class AbstractFacade<T> {
-    private Class<T> entityClass;
+    private final Class<T> entityClass;
 
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;

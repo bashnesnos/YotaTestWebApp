@@ -7,7 +7,6 @@
 package sml.test.model;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -67,9 +66,9 @@ public class Property implements Serializable {
     @XmlAttribute(required = true)
     private String name;
     @Size(max = 45)
-    @Column(name = "value")
+    @Column(name = "val")
     @XmlAttribute(required = false)
-    private String value;
+    private String val;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent")
     @XmlElementRef(name = "property")
@@ -111,12 +110,12 @@ public class Property implements Serializable {
         this.name = name;
     }
 
-    public String getValue() {
-        return value;
+    public String getVal() {
+        return val;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setVal(String val) {
+        this.val = val;
     }
 
     public Set<Property> getChildren() {
@@ -134,7 +133,7 @@ public class Property implements Serializable {
     public int hashCode() {
         int hash = 7;
         hash = 89 * hash + Objects.hashCode(this.name);
-        hash = 89 * hash + Objects.hashCode(this.value);
+        hash = 89 * hash + Objects.hashCode(this.val);
         return hash;
     }
 
@@ -145,7 +144,7 @@ public class Property implements Serializable {
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!Objects.equals(this.value, other.value)) {
+        if (!Objects.equals(this.val, other.val)) {
             return false;
         }
         
@@ -194,7 +193,7 @@ public class Property implements Serializable {
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!Objects.equals(this.value, other.value)) {
+        if (!Objects.equals(this.val, other.val)) {
             return false;
         }
         
@@ -223,7 +222,7 @@ public class Property implements Serializable {
     
     @Override
     public String toString() {
-        return "sml.test.model.Property[ name=" + name + "; value=" + value + ";\n children=" + children + " ]";
+        return "sml.test.model.Property[ name=" + name + "; val=" + val + ";\n children=" + children + " ]";
     }
     
 }

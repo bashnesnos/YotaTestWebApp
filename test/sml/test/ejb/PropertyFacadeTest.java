@@ -6,7 +6,10 @@
 
 package sml.test.ejb;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
 import org.junit.AfterClass;
@@ -29,8 +32,18 @@ public class PropertyFacadeTest {
     
     @BeforeClass
     public static void setUpClass() throws NamingException {
-        container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
-        instance = (PropertyFacadeLocal)container.getContext().lookup("java:global/classes/PropertyFacade");
+        Map<String, Object> props = new HashMap<>();  
+        File packagedWar = new File("./build/resources/test/YotaTestWebApp.war");
+        if (packagedWar.exists()) { //this should be running from Gralde then
+            props.put(EJBContainer.MODULES, new File[]{packagedWar});  
+            container = javax.ejb.embeddable.EJBContainer.createEJBContainer(props);
+            instance = (PropertyFacadeLocal)container.getContext().lookup("java:global/YotaTestWebApp/PropertyFacade");
+        }
+        else { //local netbeans stuff
+            System.out.println("./build/resources/test/YotaTestWebApp.war not found; using default glassfish domain");
+            container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
+            instance = (PropertyFacadeLocal)container.getContext().lookup("java:global/classes/PropertyFacade");
+        }
     }
     
     @AfterClass

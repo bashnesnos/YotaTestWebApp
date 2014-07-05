@@ -32,7 +32,7 @@ dependencies {
     // 'test.useTestNG()' to your build script.
     testCompile "junit:junit:4.11"
     testCompile "org.glassfish.main.extras:glassfish-embedded-all:3.1.2.2"
-    //testCompile ""
+    testCompile "mysql:mysql-connector-java:5.1.24"
 }
 
 webAppDirName = 'web'
@@ -69,6 +69,9 @@ task processTemplates(type: Copy) {
     into 'build/webinf-resources'
 }
 
+processTestResources {
+    from war
+}
 
 war {
     webInf { 

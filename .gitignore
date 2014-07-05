@@ -1,3 +1,11 @@
+#######
+## Netbeans
+#######
+
+nbproject/
+build.xml
+.gradle/
+
 #################
 ## Eclipse
 #################

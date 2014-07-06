@@ -91,7 +91,7 @@ public class MainServlet extends HttpServlet {
                 try {
                     Marshaller rootMarshaller = context.createMarshaller();
                     rootMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                    try (OutputStream output = new BufferedOutputStream(response.getOutputStream(), 4096)) {
+                    try (OutputStream output = new BufferedOutputStream(response.getOutputStream())) {
                         rootMarshaller.marshal(root, output);
                     }
                 } catch (JAXBException ex) {
@@ -122,7 +122,7 @@ public class MainServlet extends HttpServlet {
                 if (filePart.getSize() == 0) {
                     throw new ExpectedException("файл пуст");
                 }
-                try (InputStream fileContent = new BufferedInputStream(filePart.getInputStream(), 4096)) {
+                try (InputStream fileContent = new BufferedInputStream(filePart.getInputStream())) {
                     Unmarshaller rootUnmarshaller = context.createUnmarshaller();
                     Root unmarshalled = (Root) rootUnmarshaller.unmarshal(fileContent);
                     for (Property unmarshalledProp : unmarshalled.getProperties()) {

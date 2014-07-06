@@ -6,14 +6,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div style="margin-left: 35%; margin-top: 15%">
+        <div style="margin-left: 33.33%; margin-top: 15%; width: 33.33%">
             <form action="upload" method="POST" enctype="multipart/form-data">
                 Файл для загрузки: <input type="file" name="file"/>
                 <br/>
                 <input type="submit" value="Загрузить" />
             </form>
-            <br/>
+            <hr/>
             <button onclick="javascript:window.location.assign('download')">Скачать что есть</button>
+            <br/>
+            <button onclick="javascript:window.location.assign('generate')">Попробовать сгенерировать (чтобы было что загрузить)</button>
         </div>
     </body>
 </html>

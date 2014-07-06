@@ -122,8 +122,7 @@ public class MainServlet extends HttpServlet {
                 if (filePart.getSize() == 0) {
                     throw new ExpectedException("файл пуст");
                 }
-                InputStream fileContent = new BufferedInputStream(filePart.getInputStream(), 4096);
-                try {
+                try (InputStream fileContent = new BufferedInputStream(filePart.getInputStream(), 4096)) {
                     Unmarshaller rootUnmarshaller = context.createUnmarshaller();
                     Root unmarshalled = (Root) rootUnmarshaller.unmarshal(fileContent);
                     for (Property unmarshalledProp : unmarshalled.getProperties()) {

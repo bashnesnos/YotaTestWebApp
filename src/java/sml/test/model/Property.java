@@ -147,40 +147,34 @@ public class Property implements Serializable {
         if (!Objects.equals(this.val, other.val)) {
             return false;
         }
-        
-        if (!Objects.equals(this.children, other.children)) {
-            Set<Property> thisChildren = this.children;
-            Set<Property> otherChildren = other.children;
-            
-            if (thisChildren == null || otherChildren == null) {
-                if (thisChildren == null) {
-                    this.children = otherChildren;
-                }
-                else {
-                    return true;
-                }
-            }
-            else if (otherChildren.containsAll(thisChildren)) {
+
+        Set<Property> thisChildren = this.children;
+        Set<Property> otherChildren = other.children;
+
+        if (thisChildren == null || otherChildren == null) {
+            if (thisChildren == null && otherChildren != null) {
                 this.children = otherChildren;
             }
-            else { // a deeper merge is needed
-                Set<Property> distinctThis = new HashSet<>(thisChildren);
-                distinctThis.removeAll(otherChildren);
-                for (Property thisCandidate : distinctThis) {
-                    for (Property otherCandidate : otherChildren) {
-                        thisCandidate.merge(otherCandidate);
-                    }
-                }
-                thisChildren.addAll(otherChildren);
+            else {
+                return true;
             }
-            for (Property adoptChild : otherChildren) {
-                adoptChild.setParent(this);
-            }
-            return true;
         }
-        return false;
+        else { // a deeper merge is needed
+            Set<Property> distinctThis = new HashSet<>(thisChildren);
+            for (Property thisCandidate : distinctThis) {
+                for (Property otherCandidate : otherChildren) {
+                    thisCandidate.merge(otherCandidate);
+                }
+            }
+            thisChildren.addAll(otherChildren);
+        }
+        for (Property adoptChild : this.children) {
+            adoptChild.setParent(this);
+        }
+
+        return true;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -203,12 +197,7 @@ public class Property implements Serializable {
         }
         
         if (!Objects.equals(this.children, other.children)) {
-            Set<Property> thisChildren = this.children;
-            int thisSize = thisChildren == null ? 0 : thisChildren.size();
-            Set<Property> otherChildren = other.children;
-            int otherSize = otherChildren == null ? 0 : otherChildren.size();
-            
-            return (thisChildren == null || otherChildren == null) && thisSize == otherSize;
+            return (this.children == null || other.children == null); //it's actually making equal trees like A > B > C & A > B (so we can't have them both in one collection)
         }
         
         return true;
@@ -216,7 +205,31 @@ public class Property implements Serializable {
 
     void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof Property) { //we don't care about Root
-            this.parent = (Property) parent;
+            Property parentProp = (Property) parent;
+            boolean wasMerged = false;
+            for (Property existingChild: parentProp.getChildren()) {
+                if (existingChild.merge(this)) {
+                    wasMerged = true;
+                    break;
+                }
+            }
+            if (wasMerged) {
+                this.children = null;
+            }
+            this.parent = parentProp;
+        }
+        else if (parent instanceof Root) {
+            Root root = (Root) parent;
+            boolean wasMerged = false;
+            for (Property existingChild: root.getProperties()) {
+                if (existingChild.merge(this)) {
+                    wasMerged = true;
+                    break;
+                }
+            }
+            if (wasMerged) {
+                this.children = null;
+            }
         }
     }
     
@@ -226,3 +239,8 @@ public class Property implements Serializable {
     }
     
 }
+
+
+
+
+

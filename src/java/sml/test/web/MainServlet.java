@@ -129,7 +129,7 @@ public class MainServlet extends HttpServlet {
                     for (Property unmarshalledProp : unmarshalled.getProperties()) {
                         List<Property> candidates = propertyFacade.findTopByName(unmarshalledProp.getName()); //actually, it will merge all your properties with the same name and value into one hieararchy
                         
-                        if (candidates.isEmpty() || !candidates.contains(unmarshalledProp)) {
+                        if (!candidates.isEmpty() && candidates.contains(unmarshalledProp)) {
                             Property merged = null;
                             for (Property mergeCandidate : candidates) {
                                 if (mergeCandidate.merge(unmarshalledProp)) {
@@ -141,11 +141,11 @@ public class MainServlet extends HttpServlet {
                                 propertyFacade.edit(merged);
                             }
                             else {
-                                propertyFacade.create(unmarshalledProp);
+                                throw new RuntimeException("If it passes equals - should pass merge");
                             }
                         }
                         else {
-                            System.out.println("Attempt to duplicate: " + unmarshalledProp);
+                            propertyFacade.create(unmarshalledProp);
                         }
                     }
                 } 

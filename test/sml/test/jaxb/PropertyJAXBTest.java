@@ -98,7 +98,7 @@ public class PropertyJAXBTest {
         input = new StringReader("<root><property name=\"prop1\"><property name=\"child1\"><property name=\"child11\"/></property></property><property name=\"prop2\"><property name=\"child2\"><property name=\"child21\"/></property></property></root>");
         Root unmarshalledRoot = (Root) propUnmarshaller.unmarshal(input);
         
-        assertTrue(expectedRoot.getProperties().equals(unmarshalledRoot.getProperties()));
+        assertTrue(unmarshalledRoot.getProperties().equals(expectedRoot.getProperties()));
     }   
     
     @Test
@@ -139,23 +139,12 @@ public class PropertyJAXBTest {
         Root expectedRoot = new Root();
         Property expectedProp = new PropertyBuilder()
             .setName("some name")
-            .toProperty();
-
-        expectedRoot.getProperties().add(expectedProp);
-        expectedProp = new PropertyBuilder()
-            .setName("some name")
-                .child("some name", null)
-                    .child("some name", null)
-                    .parent()
-                .parent()
-                .child("some name", null)
-                .parent()
                 .child("some name", null)
                     .child("some name", null)
                         .child("some name", null)
             .toProperty();
         expectedRoot.getProperties().add(expectedProp);
-        assertTrue(unmarshalledRoot.getProperties().size() == 2);
+        assertTrue(unmarshalledRoot.getProperties().size() == 1);
         assertTrue(unmarshalledRoot.getProperties().equals(expectedRoot.getProperties()));
     }
     

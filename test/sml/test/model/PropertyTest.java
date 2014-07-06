@@ -43,7 +43,7 @@ public class PropertyTest {
         Property prop3 = new PropertyBuilder()
             .setName("prop1")
             .toProperty();
-        assertTrue(!prop1.equals(prop3));
+        assertTrue(prop1.equals(prop3) && prop3.equals(prop1));
     }
     
     @Test
@@ -94,9 +94,10 @@ public class PropertyTest {
                     .parent()
                 .parent()
                 .child("prop1", null)
+                    .child("prop1", null)
                 .toProperty();
         
-        assertTrue(!prop1.equals(prop2) && !prop2.equals(prop1));
+        assertTrue(prop1.equals(prop2) && prop2.equals(prop1));
         assertTrue(prop1.merge(prop2));
         
         Property mergeResult = new PropertyBuilder()
@@ -104,16 +105,9 @@ public class PropertyTest {
         .child("prop1", null)
             .child("prop1", null)
                 .child("prop1", null)
-                .parent()
-            .parent()
-            .child("prop1", null)
-            .parent()
-        .parent()
-        .child("prop1", null)
         .toProperty();
         
-        assertEquals(mergeResult, prop1);
-        
+        assertTrue(mergeResult.equals(prop1));
     }
 
     @Test
@@ -131,16 +125,13 @@ public class PropertyTest {
                 .setName("prop1")
                 .toProperty();
         
-        assertTrue(!prop1.equals(prop2) && !prop2.equals(prop1));
+        assertTrue(prop1.equals(prop2) && prop2.equals(prop1));
         assertTrue(prop1.merge(prop2));
         
         Property mergeResult = new PropertyBuilder()
                 .setName("prop1")
                 .child("prop1", null)
                     .child("prop1", null)
-                    .parent()
-                .parent()
-                .child("prop1", null)
                 .toProperty();
         
         assertEquals(mergeResult, prop1);
@@ -178,12 +169,6 @@ public class PropertyTest {
             .child("prop_merge1", null)
                 .child("prop_merge1", null)
                     .child("prop_merge1", null)
-                    .parent()
-                .parent()
-                .child("prop_merge1", null)
-                .parent()
-            .parent()
-            .child("prop_merge1", null)
             .toProperty();
 
         assertEquals(prop, expectedProp);

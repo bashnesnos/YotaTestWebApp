@@ -50,8 +50,9 @@ sourceSets {
     }
 }
 
-task processTemplates(type: Copy) {
-    from 'src/templates'
+task processWebInfTemplates(type: Copy) {
+    from 'src/templates/WEB-INF' 
+    
     filesMatching( 'glassfish-resources.xml' ,
         { fileCopyDetails ->
             fileCopyDetails.filter(tokens: [
@@ -64,6 +65,23 @@ task processTemplates(type: Copy) {
         } as Action
     )
     into 'build/webinf-resources'
+}
+
+task processDdlResources(type: Copy) {
+    from 'src/templates/ddl' 
+    
+    filesMatching( 'setup.sql' ,
+        { fileCopyDetails ->
+            fileCopyDetails.filter(tokens: [
+                    dbHost:dbHost
+                    , dbPort:dbPort
+                    , dbName:dbName
+                    , dbUser:dbUser
+                    , dbPassword:dbPassword
+                ], ReplaceTokens)
+        } as Action
+    )
+    into 'build/ddlResources'
 }
 
 processResources {
@@ -79,8 +97,38 @@ processTestResources {
 war {
     exclude '**/WEB-INF/glassfish-resources.xml' //so the hard-coded one is ignored
     webInf { 
-        from processTemplates
+        from processWebInfTemplates
     }
+}
+
+task prepareDB(dependsOn: processDdlResources) << {
+    def cmd = "mysql --user=$dbRootUser --password=$dbRootPassword --host=$dbHost --port=$dbPort --force"
+    println "Executing $cmd"
+    def proc = cmd.execute()
+    proc.getOutputStream().withStream {
+        it.write(file('build/ddlResources/setup.sql').text.getBytes())
+    }
+    def dbSetupLogFile = new File('dbSetup.txt')
+    def dbSetupLogFileOutput = dbSetupLogFile.newOutputStream()
+    proc.consumeProcessOutput(dbSetupLogFileOutput, dbSetupLogFileOutput)
+    proc.waitFor()
+    dbSetupLogFileOutput.flush()
+    dbSetupLogFileOutput.close()
+    
+    def errorMatcher = dbSetupLogFile.text =~ /ERROR (\d+?) .*/
+    while (errorMatcher.find()) {
+        switch(errorMatcher.group(1)) {
+            case '1007':
+                println "Database already exists"
+                break
+            case '1396':
+                println "User probably exists already:\n    ${errorMatcher.group()}"
+                break
+            default:
+                ant.fail('Check dbSetup.txt; unexpected error from the db:\n    ' + errorMatcher.group())
+        }
+    }
+    println "DB is ready"
 }
 
 task deploy(dependsOn: war) << {

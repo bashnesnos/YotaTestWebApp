@@ -35,4 +35,28 @@ public class Root {
         this.properties = properties;
     }
     
+    public boolean exactEquals(Root other) {
+        int thisSize = this.properties == null ? 0 : this.properties.size();
+        int otherSize = other.properties == null ? 0 : other.properties.size();
+        if (this.properties == null || other.properties == null) {
+            return thisSize == otherSize;
+        }
+        else if (thisSize != otherSize){
+            return false;
+        }
+        else { //going deeper
+            for (Property thisChild : this.properties) {
+                boolean equalsToAny = false;
+                for (Property otherChild : other.properties) {
+                    if (equalsToAny = thisChild.exactEquals(otherChild)) {
+                        break;
+                    }
+                }
+                if (!equalsToAny) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

@@ -83,7 +83,7 @@ public class PropertyJAXBTest {
                 .toProperty();
         
         assertTrue(unmarshalledProp != null);
-        assertTrue("Not equal after the unmarshalling", unmarshalledProp.equals(expectedProp));
+        assertTrue("Not equal after the unmarshalling", unmarshalledProp.exactEquals(expectedProp));
 
         Root expectedRoot = new Root();
         expectedRoot.getProperties().add(expectedProp);
@@ -98,7 +98,7 @@ public class PropertyJAXBTest {
         input = new StringReader("<root><property name=\"prop1\"><property name=\"child1\"><property name=\"child11\"/></property></property><property name=\"prop2\"><property name=\"child2\"><property name=\"child21\"/></property></property></root>");
         Root unmarshalledRoot = (Root) propUnmarshaller.unmarshal(input);
         
-        assertTrue(unmarshalledRoot.getProperties().equals(expectedRoot.getProperties()));
+        assertTrue(unmarshalledRoot.exactEquals(expectedRoot));
     }   
     
     @Test
@@ -145,7 +145,7 @@ public class PropertyJAXBTest {
             .toProperty();
         expectedRoot.getProperties().add(expectedProp);
         assertTrue(unmarshalledRoot.getProperties().size() == 1);
-        assertTrue(unmarshalledRoot.getProperties().equals(expectedRoot.getProperties()));
+        assertTrue(unmarshalledRoot.exactEquals(expectedRoot));
     }
     
 }

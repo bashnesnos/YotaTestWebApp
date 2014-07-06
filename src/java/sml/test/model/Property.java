@@ -175,6 +175,48 @@ public class Property implements Serializable {
         return true;
     }
 
+    public boolean exactEquals(Property other) { //less performant as it actually iterates recursively through all
+        if (other == null) {
+            return false;
+        }
+        
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        
+        if (!Objects.equals(this.val, other.val)) {
+            return false;
+        }
+
+        // assuming that children are compared after parents, so if we got here - they are equal enough        
+        if (this.parent != other.parent && (this.parent == null || other.parent == null)) {
+            return false;
+        }
+
+        int thisSize = this.children == null ? 0 : this.children.size();
+        int otherSize = other.children == null ? 0 : other.children.size();
+        if (this.children == null || other.children == null) {
+            return thisSize == otherSize;
+        }
+        else if (thisSize != otherSize){
+            return false;
+        }
+        else { //going deeper
+            for (Property thisChild : this.children) {
+                boolean equalsToAny = false;
+                for (Property otherChild : other.children) {
+                    if (equalsToAny = thisChild.exactEquals(otherChild)) {
+                        break;
+                    }
+                }
+                if (!equalsToAny) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

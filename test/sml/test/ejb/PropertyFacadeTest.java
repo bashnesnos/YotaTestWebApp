@@ -129,7 +129,7 @@ public class PropertyFacadeTest {
             .child("prop_merge1", null)
             .toProperty();
 
-        assertEquals(prop, expectedProp);
+        assertTrue(prop.exactEquals(expectedProp));
         
         instance.remove(prop);
         assertTrue(instance.findByName("prop_merge1").isEmpty());
